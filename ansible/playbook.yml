@@ -1,0 +1,41 @@
+---
+- name: Configure and deploy AeroCadet
+  hosts: application
+  gather_facts: true
+
+  pre_tasks:
+    - name: Verify the private deployment environment exists
+      ansible.builtin.stat:
+        path: "{{ compose_env_file }}"
+      register: environment_file
+
+    - name: Stop when deployment secrets are unavailable
+      ansible.builtin.assert:
+        that: environment_file.stat.exists
+        fail_msg: "Create an untracked .env from .env.example before deployment."
+
+  roles:
+    - role: docker
+    - role: nginx
+    - role: application
+
+  post_tasks:
+    - name: Verify the public gateway health endpoint
+      ansible.builtin.uri:
+        url: "{{ application_url }}/healthz"
+        status_code: 200
+        return_content: true
+      register: gateway_health
+      retries: 8
+      delay: 4
+      until: gateway_health.status == 200
+
+    - name: Verify the Spring Boot health endpoint through Nginx
+      ansible.builtin.uri:
+        url: "{{ application_url }}/actuator/health"
+        status_code: 200
+        return_content: true
+      register: backend_health
+      retries: 8
+      delay: 4
+      until: backend_health.json.status == 'UP'

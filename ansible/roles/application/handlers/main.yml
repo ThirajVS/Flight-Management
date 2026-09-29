@@ -1,0 +1,7 @@
+---
+- name: Restart AeroCadet
+  community.docker.docker_compose_v2:
+    project_src: "{{ project_dir }}"
+    project_name: "{{ compose_project_name }}"
+    env_files: ["{{ compose_env_file }}"]
+    state: restarted
