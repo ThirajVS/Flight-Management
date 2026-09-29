@@ -19,10 +19,13 @@ The tested foundation and authentication increments provide:
 - a searchable, paginated marketplace containing ten clearly fictional cadet programs;
 - detailed academic, aviation, medical-document-status, passport, and preference profiles;
 - a persisted rule-by-rule eligibility engine with eligible, not-eligible, and pending-verification outcomes;
+- seven-step draft applications with unique application numbers, submission, and status history;
+- local-volume document storage with type/size validation and recruiter verification states;
+- seven-stage selection timelines, internal notifications, unread counts, and audit events;
 - secure environment-variable templates and secret-safe Git exclusions;
 - initial environment, command, and screenshot documentation.
 
-Later increments add role-based dashboards, applications, documents, selection workflows, analytics, Docker Compose, Jenkins, and Ansible.
+Later increments add role-based dashboards, assessments/interviews, analytics, Docker Compose, Jenkins, and Ansible.
 
 ## Technology stack
 
@@ -59,6 +62,13 @@ Flight_Management/
 - `GET|PUT /api/candidates/profile` — view or complete the authenticated candidate profile
 - `POST /api/programs/{id}/eligibility` — calculate and store transparent eligibility checks
 - `GET /api/programs/{id}/eligibility/latest` — retrieve the most recent stored result
+- `POST|GET /api/applications` — create or list candidate applications
+- `PUT /api/applications/{id}/draft` — save one of seven draft steps
+- `POST /api/applications/{id}/submit` — submit and initialize selection stages
+- `GET|PUT /api/applications/{id}/status` — track or review application status
+- `POST|GET /api/applications/{id}/documents` — upload or list document metadata
+- `PUT /api/documents/{id}/review` — verify, reject, or request re-upload
+- `GET /api/notifications` — list internal notifications and unread state
 
 ## Local verification
 
@@ -89,6 +99,7 @@ Do not copy `.env.example` values into a shared environment unchanged. Create a 
 - [Screenshot manifest](docs/screenshot-manifest.md)
 - [Authentication design](docs/authentication.md)
 - [Programs, profiles, and eligibility](docs/programs-and-eligibility.md)
+- [Application and document workflow](docs/application-workflow.md)
 
 ## Safety and scope
 

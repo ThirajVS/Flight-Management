@@ -9,11 +9,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(InvalidOperationException.class)
+    ResponseEntity<ApiError> handleInvalidOperation(InvalidOperationException exception, HttpServletRequest request) {
+        return build(HttpStatus.BAD_REQUEST, exception.getMessage(), request, List.of());
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    ResponseEntity<ApiError> handleUploadLimit(MaxUploadSizeExceededException exception, HttpServletRequest request) {
+        return build(HttpStatus.BAD_REQUEST, "Uploaded file exceeds the 10 MB limit", request, List.of());
+    }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     ResponseEntity<ApiError> handleNotFound(ResourceNotFoundException exception, HttpServletRequest request) {

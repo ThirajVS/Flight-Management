@@ -24,4 +24,6 @@ Only screenshots captured from the actual tool or application are accepted. Rows
 | `04_aerocadet_registration.png` | 13 | Application browser | Verify all required candidate registration fields | Ready to capture from local port 4174 |
 | `05_program_marketplace.png` | 13 | Application browser | Show clearly labelled fictional cadet programs | Ready to capture from local port 4174 |
 | `06_eligibility_result.png` | 13 | Application browser | Show rule-by-rule eligibility and pending verification | Pending dashboard increment |
+| `07_application_timeline.png` | 13 | Application browser | Show status history and seven selection stages | Pending dashboard increment |
+| `08_document_verification.png` | 13 | Application browser | Show uploaded/verified document state | Pending dashboard increment |
 
