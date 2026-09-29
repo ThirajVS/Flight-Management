@@ -1,0 +1,8 @@
+project_dir: /mnt/c/Users/thira/Flight_Management
+compose_file: "{{ project_dir }}/docker-compose.yml"
+compose_env_file: "{{ project_dir }}/.env"
+compose_project_name: aerocadet
+application_url: http://127.0.0.1:8090
+configure_host: false
+docker_config_dir: /tmp/aerocadet-empty-docker-config
+compose_build_policy: policy

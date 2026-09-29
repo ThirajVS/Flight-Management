@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import {
   ArrowRight,
   BadgeCheck,
@@ -13,8 +14,11 @@ import {
   ShieldCheck,
   Sparkles,
 } from 'lucide-react'
+import AuthModal from './components/AuthModal'
+import Dashboard from './components/Dashboard'
+import { getPrograms, getStoredUser } from './lib/api'
 
-const programs = [
+const fallbackPrograms = [
   {
     code: 'ACP-01',
     title: 'Airline Cadet Pilot Program',
@@ -60,6 +64,42 @@ function BrandMark() {
 }
 
 function App() {
+  const [authMode, setAuthMode] = useState(null)
+  const [programs, setPrograms] = useState(fallbackPrograms)
+  const [sessionUser, setSessionUser] = useState(() => getStoredUser())
+
+  useEffect(() => {
+    let active = true
+    async function loadPrograms() {
+      try {
+        const result = await getPrograms({ status: 'OPEN', size: 3 })
+        if (active && result.content?.length) {
+          setPrograms(result.content.map((program, index) => ({
+            code: program.code,
+            title: program.name,
+            organisation: program.organisation,
+            location: program.trainingLocation,
+            duration: `${program.durationMonths} months`,
+            deadline: new Date(`${program.applicationDeadline}T00:00:00`).toLocaleDateString('en-GB', {
+              day: '2-digit',
+              month: 'short',
+              year: 'numeric',
+            }),
+            accent: ['sky', 'violet', 'cyan'][index % 3],
+          })))
+        }
+      } catch {
+        // The curated fallback keeps the landing page useful when the API is offline.
+      }
+    }
+    loadPrograms()
+    return () => { active = false }
+  }, [])
+
+  if (sessionUser) {
+    return <Dashboard user={sessionUser} onSignedOut={() => setSessionUser(null)} />
+  }
+
   return (
     <main>
       <header className="site-header">
@@ -74,8 +114,8 @@ function App() {
           <a href="#about">Why AeroCadet</a>
         </nav>
         <div className="header-actions">
-          <button className="text-button" type="button">Sign in</button>
-          <button className="primary-button compact" type="button">
+          <button className="text-button" type="button" onClick={() => setAuthMode('login')}>Sign in</button>
+          <button className="primary-button compact" type="button" onClick={() => setAuthMode('register')}>
             Create account <ArrowRight size={15} />
           </button>
           <button className="menu-button" type="button" aria-label="Open menu"><Menu /></button>
@@ -224,7 +264,7 @@ function App() {
           <h2>Build your cadet journey with confidence.</h2>
           <p>Create your candidate profile, explore demo programs and keep every application milestone visible.</p>
         </div>
-        <button className="primary-button light" type="button">Create your profile <ArrowRight size={18} /></button>
+        <button className="primary-button light" type="button" onClick={() => setAuthMode('register')}>Create your profile <ArrowRight size={18} /></button>
       </section>
 
       <footer>
@@ -232,6 +272,7 @@ function App() {
         <p>Educational DevOps laboratory project · Synthetic data only · Not affiliated with an airline.</p>
         <span>© 2026 AeroCadet</span>
       </footer>
+      {authMode && <AuthModal initialMode={authMode} onClose={() => setAuthMode(null)} onAuthenticated={setSessionUser} />}
     </main>
   )
 }

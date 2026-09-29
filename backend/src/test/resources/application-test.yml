@@ -6,7 +6,17 @@ spring:
     driver-class-name: org.h2.Driver
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: validate
   flyway:
-    enabled: false
+    enabled: true
+
+app:
+  security:
+    jwt:
+      secret: test-only-aerocadet-jwt-secret-with-at-least-32-characters
+      expiration-ms: 3600000
+  cors:
+    allowed-origins: http://localhost:3000
+  storage:
+    upload-directory: target/test-uploads
 

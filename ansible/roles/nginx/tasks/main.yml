@@ -1,0 +1,29 @@
+---
+- name: Verify the versioned Nginx gateway configuration exists
+  ansible.builtin.stat:
+    path: "{{ project_dir }}/nginx/nginx.conf"
+  register: nginx_configuration
+
+- name: Require the Nginx gateway configuration
+  ansible.builtin.assert:
+    that: nginx_configuration.stat.exists
+    fail_msg: "nginx/nginx.conf is required for gateway deployment."
+
+- name: Validate Nginx configuration in the pinned container image
+  ansible.builtin.command:
+    argv:
+      - docker
+      - --config
+      - "{{ docker_config_dir }}"
+      - run
+      - --rm
+      - --network
+      - aerocadet_aerocadet
+      - -v
+      - "{{ project_dir }}/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro"
+      - nginx:1.27-alpine
+      - nginx
+      - -t
+  changed_when: false
+  environment:
+    DOCKER_CONFIG: "{{ docker_config_dir }}"
