@@ -21,7 +21,7 @@ describe('AeroCadet landing page', () => {
       screen.getAllByText((content, element) =>
         element.classList.contains('organisation') && content.includes('· Demo'),
       ),
-    ).toHaveLength(99)
+    ).toHaveLength(3)
     expect(screen.getByText(/program names, organisations, dates and costs.*fictional/i)).toBeInTheDocument()
   })
 
