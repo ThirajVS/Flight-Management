@@ -2,6 +2,6 @@
 
 This file exists only to demonstrate a safe, documented merge conflict for DevOps Experiment 3.
 
-Deployment evidence label: BASELINE
+Deployment evidence label: JENKINS_CI
 
 The resolved value combines both valid contributions and does not affect application runtime.
