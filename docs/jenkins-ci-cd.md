@@ -31,6 +31,7 @@ Verified build history:
 | `#3` | Success | `DEPLOY=false`; all 19 tests passed, JUnit results and artifacts were published. |
 | `#4` | Failed by design | Branch `ci/failure-demo`, commit `68f7aa0`; 1 frontend test failed, 5 passed, backend 13/13 passed, and every downstream deployment stage was skipped. |
 | `#5` | Success | Commit `cacf932` restored the assertion; all 19 tests passed and the pipeline recovered. |
+| `#6` | Success | Final develop commit `17d30db`; all 19 tests passed with no failures and artifacts were published. |
 
 The job was restored to `*/develop` after the controlled failure/recovery exercise.
 
@@ -46,4 +47,4 @@ Jenkins listens on `localhost:8080`; GitHub cannot deliver to a loopback endpoin
 
 ## Result
 
-Freestyle and Pipeline CI are verified. The test-failure gate is proven by real builds `#4` and `#5`; container deployment, persistence, Ansible convergence, idempotence, and health were independently verified through the Docker-capable Ubuntu WSL environment.
+Freestyle and Pipeline CI are verified. The test-failure gate is proven by real builds `#4` and `#5`, and final develop build `#6` is green; container deployment, persistence, Ansible convergence, idempotence, and health were independently verified through the Docker-capable Ubuntu WSL environment.

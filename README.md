@@ -14,7 +14,7 @@ All candidates, programs, documents, scores, interviews, and organisations are f
 | Backend tests | 13 passed |
 | Frontend tests | 6 passed |
 | Jenkins Freestyle | `AeroCadet-Freestyle #1` — SUCCESS |
-| Jenkins Pipeline | `#4` real failure gate; `#5` corrected SUCCESS |
+| Jenkins Pipeline | `#4` real failure gate; `#5` recovery; final develop build `#6` SUCCESS |
 | Docker | Four services healthy |
 | Persistence | 28 users remained after PostgreSQL container recreation |
 | Ansible | `ok=14 changed=1 failed=0`; second run `changed=0` |
@@ -201,7 +201,7 @@ Named volumes `aerocadet_postgres-data` and `aerocadet_uploads` persist the data
 - `AeroCadet-Pipeline` loads `Jenkinsfile` from `develop`, builds both applications, runs tests in parallel, publishes tests/artifacts, and contains real Docker/Compose/Ansible/health stages.
 - `DEPLOY=false` by default because the local Jenkins Windows service is `SYSTEM` and cannot use the interactive user's WSL-only Docker engine. Enable it on a Docker-capable agent.
 
-Failure proof is preserved: build `#4` failed a deliberately incorrect frontend assertion and skipped every deployment stage; commit `cacf932` restored the test and build `#5` succeeded.
+Failure proof is preserved: build `#4` failed a deliberately incorrect frontend assertion and skipped every deployment stage; commit `cacf932` restored the test and build `#5` succeeded. Final develop build `#6` then verified completion commit `17d30db` with no test failures and published artifacts.
 
 GitHub cannot call `localhost:8080`; webhook success is therefore not claimed. Poll SCM is working. See `docs/experiment-06-webhook.md` for the exact public-endpoint procedure.
 

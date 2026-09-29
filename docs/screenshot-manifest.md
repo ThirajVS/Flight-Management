@@ -64,10 +64,10 @@ Status key: **MANUAL SCREENSHOT REQUIRED** means the underlying operation is doc
 |---|---|---|---|---|
 | `01_pipeline_configuration.png` | Jenkins browser | Pipeline from SCM, `*/develop`, `Jenkinsfile` | Verify source-controlled pipeline | MANUAL SCREENSHOT REQUIRED |
 | `02_jenkinsfile.png` | Editor/GitHub | Show stage declarations without secret values | Verify pipeline definition | MANUAL SCREENSHOT REQUIRED |
-| `03_stage_view_success.png` | Jenkins browser | Build `#5`, green build/test/report stages | Prove recovered pipeline | MANUAL SCREENSHOT REQUIRED |
+| `03_stage_view_success.png` | Jenkins browser | Final develop build `#6`, green build/test/report stages | Prove completed pipeline | MANUAL SCREENSHOT REQUIRED |
 | `04_test_report.png` | Jenkins browser | Latest Test Result with 19 tests and no failures | Prove continuous testing | MANUAL SCREENSHOT REQUIRED |
 | `05_artifacts.png` | Jenkins browser | Build artifacts list | Prove publication | MANUAL SCREENSHOT REQUIRED |
-| `06_console_success.png` | Jenkins browser | Build `#5` ending `SUCCESS` | Prove pipeline success | MANUAL SCREENSHOT REQUIRED |
+| `06_console_success.png` | Jenkins browser | Build `#6` on revision `17d30db` ending `SUCCESS` | Prove final pipeline success | MANUAL SCREENSHOT REQUIRED |
 
 ## Experiment 6 — GitHub webhook
 

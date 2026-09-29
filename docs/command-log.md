@@ -46,4 +46,5 @@ Actual execution evidence is recorded incrementally. Secret values and credentia
 | Fetch vs Pull | 2026-09-30 | PowerShell | Compare HEAD around `git fetch`; then `git pull --ff-only origin develop` | Demonstrate semantics | Fetch leaves HEAD; pull integrates | HEAD unchanged; pull already up to date | Pass | Manual capture required |
 | Restart Helper | 2026-09-30 | PowerShell | `.\scripts\start-aerocadet.ps1` | Recover after reboot/shutdown | Docker starts and stack becomes healthy | Four healthy services; application URL printed | Pass | Manual capture required |
 | Status Helper | 2026-09-30 | PowerShell | `.\scripts\status-aerocadet.ps1` | Inspect deployment | Containers and backend health shown | Four healthy; backend `UP` | Pass | Manual capture required |
+| Final Jenkins CI | 2026-09-30 | Jenkins browser | Run `AeroCadet-Pipeline #6` from `develop` | Verify completion commit `17d30db` | Tests/reports/artifacts succeed | 19 tests, no failures, artifacts published, `SUCCESS` | Pass | Manual file export required |
 

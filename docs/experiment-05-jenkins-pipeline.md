@@ -27,6 +27,7 @@ Stages are Checkout, Backend Build, Frontend Build, parallel Automated Testing, 
 - `#3`: `DEPLOY=false`; 13 backend + 6 frontend tests passed, JUnit was recorded, artifacts archived, and the Pipeline ended `SUCCESS`.
 - `#4`: controlled failing frontend test; deployment stages were skipped and the Pipeline failed.
 - `#5`: corrected test; all tests passed and the Pipeline recovered to `SUCCESS`.
+- `#6`: final develop commit `17d30db`; all 19 tests passed, artifacts were published, and the Pipeline ended `SUCCESS`.
 
 `DEPLOY` remains available but defaults false on this agent. Docker, Compose deployment, Ansible, and health were independently executed and verified on the Docker-capable Ubuntu WSL environment.
 

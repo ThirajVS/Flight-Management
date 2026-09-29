@@ -30,6 +30,7 @@ The application provides JWT/BCrypt authentication, role dashboards, candidate p
 - Freestyle `#1`: success, 19 tests.
 - Pipeline `#4`: intentional test failure and deployment gate.
 - Pipeline `#5`: corrected success with JUnit/artifacts.
+- Pipeline `#6`: final develop completion commit `17d30db`, 19 tests with no failures, and published artifacts.
 - Docker: four healthy services and persistent 28-user database.
 - Ansible: `ok=14 changed=1 failed=0`, then idempotent `changed=0`.
 - Browser: landing page and candidate/recruiter/admin dashboards verified at `http://localhost:8090`.
