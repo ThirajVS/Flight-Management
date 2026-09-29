@@ -30,6 +30,11 @@ export function register(candidate) {
   })
 }
 
+export function getPrograms(params = {}) {
+  const query = new URLSearchParams(params).toString()
+  return request(`/programs${query ? `?${query}` : ''}`)
+}
+
 export function storeSession(authResponse) {
   sessionStorage.setItem('aerocadet.accessToken', authResponse.accessToken)
   sessionStorage.setItem('aerocadet.user', JSON.stringify(authResponse.user))

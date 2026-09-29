@@ -22,4 +22,6 @@ Only screenshots captured from the actual tool or application are accepted. Rows
 | `02_aerocadet_mobile.png` | 13 | Application browser | Verify the responsive mobile landing page | Ready to capture at 390×844 viewport |
 | `03_aerocadet_sign_in.png` | 13 | Application browser | Verify the real sign-in interface | Ready to capture from local port 4174 |
 | `04_aerocadet_registration.png` | 13 | Application browser | Verify all required candidate registration fields | Ready to capture from local port 4174 |
+| `05_program_marketplace.png` | 13 | Application browser | Show clearly labelled fictional cadet programs | Ready to capture from local port 4174 |
+| `06_eligibility_result.png` | 13 | Application browser | Show rule-by-rule eligibility and pending verification | Pending dashboard increment |
 
