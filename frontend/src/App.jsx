@@ -15,7 +15,8 @@ import {
   Sparkles,
 } from 'lucide-react'
 import AuthModal from './components/AuthModal'
-import { getPrograms } from './lib/api'
+import Dashboard from './components/Dashboard'
+import { getPrograms, getStoredUser } from './lib/api'
 
 const fallbackPrograms = [
   {
@@ -65,6 +66,7 @@ function BrandMark() {
 function App() {
   const [authMode, setAuthMode] = useState(null)
   const [programs, setPrograms] = useState(fallbackPrograms)
+  const [sessionUser, setSessionUser] = useState(() => getStoredUser())
 
   useEffect(() => {
     let active = true
@@ -93,6 +95,10 @@ function App() {
     loadPrograms()
     return () => { active = false }
   }, [])
+
+  if (sessionUser) {
+    return <Dashboard user={sessionUser} onSignedOut={() => setSessionUser(null)} />
+  }
 
   return (
     <main>
@@ -266,7 +272,7 @@ function App() {
         <p>Educational DevOps laboratory project · Synthetic data only · Not affiliated with an airline.</p>
         <span>© 2026 AeroCadet</span>
       </footer>
-      {authMode && <AuthModal initialMode={authMode} onClose={() => setAuthMode(null)} />}
+      {authMode && <AuthModal initialMode={authMode} onClose={() => setAuthMode(null)} onAuthenticated={setSessionUser} />}
     </main>
   )
 }

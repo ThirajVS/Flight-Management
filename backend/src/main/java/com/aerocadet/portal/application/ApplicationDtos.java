@@ -16,6 +16,9 @@ public final class ApplicationDtos {
     public record CreateRequest(@NotNull Long programId) {}
     public record DraftRequest(@Min(1) @Max(7) int step, @NotNull Map<String, Object> data) {}
     public record StatusUpdate(@NotNull ApplicationStatus status, @Size(max = 1000) String remarks) {}
+    public record StageUpdate(@NotNull @jakarta.validation.constraints.Pattern(regexp = "NOT_STARTED|SCHEDULED|IN_PROGRESS|COMPLETED|QUALIFIED|NOT_QUALIFIED") String status,
+                              Instant scheduledAt, @jakarta.validation.constraints.DecimalMin("0.00") @jakarta.validation.constraints.DecimalMax("100.00") BigDecimal score,
+                              @Size(max = 1000) String remarks) {}
 
     public record Response(
             Long id, String applicationNumber, Long programId, String programName,
