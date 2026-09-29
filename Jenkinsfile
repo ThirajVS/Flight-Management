@@ -13,7 +13,7 @@ pipeline {
     }
 
     environment {
-        DOCKER_CLI = 'C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe'
+        DOCKER_CLI = 'C:/Program Files/Docker/Docker/resources/bin/docker.exe'
         COMPOSE_PROJECT_NAME = 'aerocadet-ci'
         CI_APP_URL = 'http://localhost:18090'
     }
@@ -100,7 +100,7 @@ pipeline {
                         bat '''
                           @if not exist ".docker-ci" mkdir ".docker-ci"
                           @powershell -NoProfile -Command "$s=[guid]::NewGuid().ToString('N')+[guid]::NewGuid().ToString('N'); @('DATABASE_NAME=aerocadet','DATABASE_USERNAME=aerocadet',('DATABASE_PASSWORD='+$s),('JWT_SECRET='+$s+$s),'DEMO_DATA_ENABLED=true','APP_HOST_PORT=18090','BACKEND_HOST_PORT=18081','POSTGRES_HOST_PORT=15433') | Set-Content -Encoding ascii .env.jenkins"
-                          @"%DOCKER_CLI%" --config "%WORKSPACE%\.docker-ci" compose --env-file "%WORKSPACE%\.env.jenkins" -p "%COMPOSE_PROJECT_NAME%" build
+                          @"%DOCKER_CLI%" --config "%WORKSPACE%/.docker-ci" compose --env-file "%WORKSPACE%/.env.jenkins" -p "%COMPOSE_PROJECT_NAME%" build
                         '''
                     }
                 }
@@ -112,7 +112,7 @@ pipeline {
             steps {
                 script {
                     if (isUnix()) { sh 'docker --config "$WORKSPACE/.docker-ci" compose --env-file .env.jenkins -p "$COMPOSE_PROJECT_NAME" config --quiet' }
-                    else { bat '"%DOCKER_CLI%" --config "%WORKSPACE%\.docker-ci" compose --env-file "%WORKSPACE%\.env.jenkins" -p "%COMPOSE_PROJECT_NAME%" config --quiet' }
+                    else { bat '"%DOCKER_CLI%" --config "%WORKSPACE%/.docker-ci" compose --env-file "%WORKSPACE%/.env.jenkins" -p "%COMPOSE_PROJECT_NAME%" config --quiet' }
                 }
             }
         }
@@ -122,7 +122,7 @@ pipeline {
             steps {
                 script {
                     if (isUnix()) { sh 'docker --config "$WORKSPACE/.docker-ci" compose --env-file .env.jenkins -p "$COMPOSE_PROJECT_NAME" up -d --wait' }
-                    else { bat '"%DOCKER_CLI%" --config "%WORKSPACE%\.docker-ci" compose --env-file "%WORKSPACE%\.env.jenkins" -p "%COMPOSE_PROJECT_NAME%" up -d --wait' }
+                    else { bat '"%DOCKER_CLI%" --config "%WORKSPACE%/.docker-ci" compose --env-file "%WORKSPACE%/.env.jenkins" -p "%COMPOSE_PROJECT_NAME%" up -d --wait' }
                 }
             }
         }
