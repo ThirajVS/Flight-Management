@@ -4,7 +4,7 @@ spring:
   datasource:
     url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:aerocadet}
     username: ${DATABASE_USERNAME:aerocadet}
-    password: ${DATABASE_PASSWORD:aerocadet}
+    password: ${DATABASE_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: validate
@@ -52,4 +52,5 @@ app:
     upload-directory: ${UPLOAD_DIRECTORY:uploads}
   demo-data:
     enabled: ${DEMO_DATA_ENABLED:false}
+    password: ${DEMO_ACCOUNT_PASSWORD:}
 

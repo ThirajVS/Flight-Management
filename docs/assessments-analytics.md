@@ -19,7 +19,7 @@ This increment completes the main selection workflow with synthetic assessment q
 
 Demo seeding is opt-in through `DEMO_DATA_ENABLED=true`. It creates 20 candidates, five recruiters, three administrators, 30 applications, 30 document records, 12 assessment attempts, eight interviews, notifications, selection stages, and audit events. All people and organizations are fictional.
 
-Demo account patterns are `candidate01@demo.aerocadet.local`, `recruiter01@demo.aerocadet.local`, and `admin01@demo.aerocadet.local`. The local-only demo password is documented in deployment notes and must not be reused outside this lab.
+Demo account patterns are `candidate01@demo.aerocadet.local`, `recruiter01@demo.aerocadet.local`, and `admin01@demo.aerocadet.local`. The local-only demo password is supplied through `DEMO_ACCOUNT_PASSWORD` in the ignored `.env` file and must not be reused outside this lab.
 
 ## Verification
 

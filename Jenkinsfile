@@ -90,6 +90,7 @@ pipeline {
                             'DATABASE_USERNAME=aerocadet' \
                             "DATABASE_PASSWORD=$SECRET" \
                             "JWT_SECRET=$SECRET-$SECRET" \
+                            "DEMO_ACCOUNT_PASSWORD=$SECRET-demo" \
                             'DEMO_DATA_ENABLED=true' \
                             'APP_HOST_PORT=18090' \
                             'BACKEND_HOST_PORT=18081' \
@@ -99,7 +100,7 @@ pipeline {
                     } else {
                         bat '''
                           @if not exist ".docker-ci" mkdir ".docker-ci"
-                          @powershell -NoProfile -Command "$s=[guid]::NewGuid().ToString('N')+[guid]::NewGuid().ToString('N'); @('DATABASE_NAME=aerocadet','DATABASE_USERNAME=aerocadet',('DATABASE_PASSWORD='+$s),('JWT_SECRET='+$s+$s),'DEMO_DATA_ENABLED=true','APP_HOST_PORT=18090','BACKEND_HOST_PORT=18081','POSTGRES_HOST_PORT=15433') | Set-Content -Encoding ascii .env.jenkins"
+                          @powershell -NoProfile -Command "$s=[guid]::NewGuid().ToString('N')+[guid]::NewGuid().ToString('N'); @('DATABASE_NAME=aerocadet','DATABASE_USERNAME=aerocadet',('DATABASE_PASSWORD='+$s),('JWT_SECRET='+$s+$s),('DEMO_ACCOUNT_PASSWORD='+$s+'-demo'),'DEMO_DATA_ENABLED=true','APP_HOST_PORT=18090','BACKEND_HOST_PORT=18081','POSTGRES_HOST_PORT=15433') | Set-Content -Encoding ascii .env.jenkins"
                           @"%DOCKER_CLI%" --config "%WORKSPACE%/.docker-ci" compose --env-file "%WORKSPACE%/.env.jenkins" -p "%COMPOSE_PROJECT_NAME%" build
                         '''
                     }
@@ -160,7 +161,7 @@ pipeline {
             archiveArtifacts artifacts: 'backend/target/*.jar,frontend/dist/**,frontend/reports/*.xml', allowEmptyArchive: true, fingerprint: true
             deleteDir()
         }
-        success { echo 'AeroCadet CI/CD completed with verified health.' }
+        success { echo 'AeroCadet CI completed successfully; deployment health is verified when DEPLOY=true.' }
         failure { echo 'AeroCadet deployment was blocked because a required stage failed.' }
     }
 }

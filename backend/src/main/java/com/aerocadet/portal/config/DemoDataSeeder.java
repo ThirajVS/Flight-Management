@@ -10,6 +10,7 @@ import java.util.List;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -22,11 +23,20 @@ import org.springframework.transaction.annotation.Transactional;
 public class DemoDataSeeder implements ApplicationRunner {
     private final JdbcTemplate jdbc;
     private final PasswordEncoder passwordEncoder;
-    public DemoDataSeeder(JdbcTemplate jdbc,PasswordEncoder passwordEncoder){this.jdbc=jdbc;this.passwordEncoder=passwordEncoder;}
+    private final String demoAccountPassword;
+    public DemoDataSeeder(JdbcTemplate jdbc,PasswordEncoder passwordEncoder,
+            @Value("${app.demo-data.password:}") String demoAccountPassword){
+        this.jdbc=jdbc;
+        this.passwordEncoder=passwordEncoder;
+        this.demoAccountPassword=demoAccountPassword;
+    }
     @Override @Transactional public void run(ApplicationArguments args){
         Integer existing=jdbc.queryForObject("SELECT COUNT(*) FROM users",Integer.class);
         if(existing!=null&&existing>0)return;
-        String hash=passwordEncoder.encode("AeroCadetDemo!2026");
+        if(demoAccountPassword==null||demoAccountPassword.isBlank()){
+            throw new IllegalStateException("DEMO_ACCOUNT_PASSWORD is required when demo data is enabled");
+        }
+        String hash=passwordEncoder.encode(demoAccountPassword);
         Long candidateRole=roleId("ROLE_CANDIDATE"), recruiterRole=roleId("ROLE_RECRUITER"), adminRole=roleId("ROLE_ADMIN");
         long[] candidates=new long[20];
         for(int i=1;i<=20;i++){

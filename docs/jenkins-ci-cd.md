@@ -1,42 +1,49 @@
 # Jenkins CI/CD
 
-## Jobs
+## Verified jobs
 
-### Freestyle
+### AeroCadet-Freestyle
 
-The Freestyle job uses the public GitHub repository and runs:
+The job uses the public GitHub repository, branch `*/develop`, and Poll SCM schedule `H/5 * * * *`. Its Windows build step is:
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\jenkins-freestyle.ps1
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/jenkins-freestyle.ps1
 ```
 
-The script runs the Maven-wrapper backend tests, installs locked frontend dependencies, runs Vitest with JUnit output, and produces the Vite build. Configure **Publish JUnit test result report** with:
+The script runs the Maven-wrapper backend tests, installs locked frontend dependencies, runs Vitest with JUnit output, and produces the Vite build. The JUnit publisher uses:
 
 ```text
 backend/target/surefire-reports/*.xml, frontend/reports/junit.xml
 ```
 
-### Pipeline
+Build `#1` checked out commit `54b020b`, passed 13 backend and 6 frontend tests, produced the frontend bundle, published results, and finished `SUCCESS`.
 
-The Pipeline job loads `Jenkinsfile` from source control. Its real stages are Checkout, Backend Build, Frontend Build, parallel backend/frontend tests, Test Report, Docker Build, Compose Validation, Deployment, optional Ansible Convergence, and Health Check. All deployment stages are downstream of tests, so a failed test prevents image build and deployment.
+### AeroCadet-Pipeline
 
-The default isolated CI ports are 18090, 18081, and 15433. Ephemeral CI-only database/JWT values are generated in the workspace and removed by `deleteDir()`; no credential is stored in Git.
+The job loads `Jenkinsfile` from SCM using the same repository, branch `*/develop`, and five-minute polling schedule. Stages are Checkout, Backend Build, Frontend Build, parallel Automated Testing, Test Report, Docker Build, Compose Validation, Deployment, optional Ansible Convergence, and Health Check. All deployment stages depend on successful tests.
 
-## Windows agent note
+Verified build history:
 
-`DEPLOY` is disabled by default because this workstation's Jenkins service runs as Windows `SYSTEM`, while Docker is available only through the interactive user's WSL engine. The build-and-test path therefore runs reliably on the local service. Enable `DEPLOY` on an agent with Docker CLI access to execute the Docker Build, Compose Validation, Deployment, and Health Check stages against the isolated CI ports. `RUN_ANSIBLE` is also disabled by default because a Windows service account may not own the interactive user's WSL distribution. Ansible was independently verified from Ubuntu; enable it only where Ubuntu/Ansible is available to the service account.
+| Build | Result | Evidence |
+|---:|---|---|
+| `#1` | Failed | Exposed and led to correction of a Groovy Windows-path quoting defect. |
+| `#2` | Failed | Builds/tests passed; Docker stage proved the Windows `SYSTEM` service cannot access the interactive user's WSL-only engine. |
+| `#3` | Success | `DEPLOY=false`; all 19 tests passed, JUnit results and artifacts were published. |
+| `#4` | Failed by design | Branch `ci/failure-demo`, commit `68f7aa0`; 1 frontend test failed, 5 passed, backend 13/13 passed, and every downstream deployment stage was skipped. |
+| `#5` | Success | Commit `cacf932` restored the assertion; all 19 tests passed and the pipeline recovered. |
 
-## Webhook honesty
+The job was restored to `*/develop` after the controlled failure/recovery exercise.
 
-The repository is public, but Jenkins currently listens on `localhost:8080`. GitHub cannot deliver to a loopback-only endpoint. Do not claim automatic webhook delivery until Jenkins is exposed using a controlled HTTPS tunnel or reachable lab server and a GitHub delivery shows HTTP 2xx. The manual polling alternative is **Poll SCM** (`H/5 * * * *`) for the lab.
+## Agent-aware deployment
 
-## Real failure/recovery demonstration
+`DEPLOY` defaults to false because this workstation's Jenkins service runs as Windows `SYSTEM`, while Docker is available only through the signed-in user's Ubuntu WSL engine. This keeps the local CI path reliable without pretending that the service account can deploy. On a Docker-capable agent, enable `DEPLOY` to run Docker Build, Compose Validation, Deployment, and Health Check on isolated ports 18090, 18081, and 15433. Enable `RUN_ANSIBLE` only when Ansible is also available to that agent.
 
-1. Create a short-lived `ci/failure-demo` branch.
-2. Change one existing test assertion so it must fail; never weaken production code.
-3. Push the branch and build it in Jenkins. Verify `Automated Testing` fails and all deployment stages are skipped.
-4. Revert the test-only commit, push again, and rebuild.
-5. Verify tests, image build, deployment, and health check all succeed.
-6. Delete the demonstration branch after capturing evidence.
+The pipeline creates ephemeral `.env.jenkins` credentials at run time, including the database, JWT, and demo-account values, and `deleteDir()` removes the workspace afterward. No operational credential is committed.
 
-This is intentionally documented as a procedure until both builds are captured; results must not be fabricated.
+## GitHub trigger boundary
+
+Jenkins listens on `localhost:8080`; GitHub cannot deliver to a loopback endpoint. Webhook success is not claimed. Poll SCM is the verified automatic-change detector for this workstation. To complete a webhook demonstration, expose Jenkins through a controlled HTTPS endpoint, configure `<public-url>/github-webhook/`, enable the GitHub hook trigger, push a harmless commit, and capture a GitHub HTTP 2xx delivery plus a Jenkins build marked `Started by GitHub push`.
+
+## Result
+
+Freestyle and Pipeline CI are verified. The test-failure gate is proven by real builds `#4` and `#5`; container deployment, persistence, Ansible convergence, idempotence, and health were independently verified through the Docker-capable Ubuntu WSL environment.

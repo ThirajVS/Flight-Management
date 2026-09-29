@@ -17,20 +17,27 @@ $requiredFiles = @(
     'ansible/playbook.yml',
     'docs/environment-check.md',
     'docs/command-log.md',
-    'docs/screenshot-manifest.md'
+    'docs/screenshot-manifest.md',
+    'scripts/start-aerocadet.ps1',
+    'scripts/status-aerocadet.ps1',
+    'scripts/stop-aerocadet.ps1'
 )
+
+$requiredFiles += 1..13 | ForEach-Object {
+    'docs/experiment-{0:D2}-*.md' -f $_
+}
 
 Write-Host 'AeroCadet foundation validation' -ForegroundColor Cyan
 
 foreach ($relativePath in $requiredFiles) {
-    $fullPath = Join-Path $projectRoot $relativePath
-    if (-not (Test-Path -LiteralPath $fullPath)) {
+    $matches = Get-ChildItem -Path (Join-Path $projectRoot $relativePath) -ErrorAction SilentlyContinue
+    if (-not $matches) {
         throw "Missing required file: $relativePath"
     }
     Write-Host "[PASS] $relativePath"
 }
 
-$requiredEnvironmentNames = @('DATABASE_PASSWORD', 'JWT_SECRET')
+$requiredEnvironmentNames = @('DATABASE_PASSWORD', 'JWT_SECRET', 'DEMO_ACCOUNT_PASSWORD')
 if (Test-Path -LiteralPath (Join-Path $projectRoot '.env')) {
     $environmentText = Get-Content -Raw (Join-Path $projectRoot '.env')
     foreach ($name in $requiredEnvironmentNames) {
@@ -47,6 +54,12 @@ if ($ignoredEnvironmentFile -ne '.env') {
 }
 Write-Host '[PASS] .env is excluded from Git'
 
+$trackedEnvironmentFile = git -C $projectRoot -c safe.directory=$projectRoot ls-files --error-unmatch .env 2>$null
+if ($LASTEXITCODE -eq 0 -or $trackedEnvironmentFile) {
+    throw '.env must not be tracked by Git.'
+}
+Write-Host '[PASS] .env is not tracked by Git'
+
 if (-not $SkipTests) {
     if (Test-Path -LiteralPath (Join-Path $projectRoot 'frontend/node_modules')) {
         Push-Location (Join-Path $projectRoot 'frontend')
@@ -58,6 +71,14 @@ if (-not $SkipTests) {
         }
     } else {
         Write-Warning 'Frontend dependencies are not installed; skipping frontend tests.'
+    }
+
+    Push-Location (Join-Path $projectRoot 'backend')
+    try {
+        & .\mvnw.cmd -B test
+        if ($LASTEXITCODE -ne 0) { throw 'Backend tests failed.' }
+    } finally {
+        Pop-Location
     }
 }
 
