@@ -1,0 +1,39 @@
+---
+- name: Validate Docker Compose configuration
+  ansible.builtin.command:
+    argv:
+      - docker
+      - --config
+      - "{{ docker_config_dir }}"
+      - compose
+      - --env-file
+      - "{{ compose_env_file }}"
+      - -f
+      - "{{ compose_file }}"
+      - config
+      - --quiet
+  changed_when: false
+  environment:
+    DOCKER_CONFIG: "{{ docker_config_dir }}"
+
+- name: Build and converge frontend, backend, PostgreSQL and Nginx
+  community.docker.docker_compose_v2:
+    project_src: "{{ project_dir }}"
+    project_name: "{{ compose_project_name }}"
+    env_files:
+      - "{{ compose_env_file }}"
+    build: "{{ compose_build_policy }}"
+    state: present
+    wait: true
+    wait_timeout: 180
+  environment:
+    DOCKER_CONFIG: "{{ docker_config_dir }}"
+
+- name: Read converged container state
+  ansible.builtin.command: docker --config {{ docker_config_dir }} compose --env-file {{ compose_env_file }} -f {{ compose_file }} ps
+  register: compose_status
+  changed_when: false
+
+- name: Display deployed container state
+  ansible.builtin.debug:
+    var: compose_status.stdout_lines

@@ -1,0 +1,32 @@
+---
+- name: Install container host packages when provisioning a server
+  become: true
+  ansible.builtin.apt:
+    name:
+      - ca-certificates
+      - curl
+      - docker.io
+      - docker-compose-v2
+    state: present
+    update_cache: true
+  when: configure_host | bool
+
+- name: Enable Docker when provisioning a server
+  become: true
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: true
+  when: configure_host | bool
+
+- name: Create isolated Docker client configuration
+  ansible.builtin.file:
+    path: "{{ docker_config_dir }}"
+    state: directory
+    mode: '0700'
+
+- name: Verify Docker engine connectivity
+  ansible.builtin.command: docker --config {{ docker_config_dir }} info --format {% raw %}'{{.ServerVersion}}'{% endraw %}
+  changed_when: false
+  environment:
+    DOCKER_CONFIG: "{{ docker_config_dir }}"
