@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
 import App from './App'
 
@@ -22,6 +22,19 @@ describe('AeroCadet landing page', () => {
       ),
     ).toHaveLength(3)
     expect(screen.getByText(/program names, organisations, dates and costs.*fictional/i)).toBeInTheDocument()
+  })
+
+  it('opens sign-in and registration forms from the landing page', () => {
+    render(<App />)
+
+    fireEvent.click(screen.getByRole('button', { name: /^sign in$/i }))
+    expect(screen.getByRole('dialog', { name: /sign in to aerocadet/i })).toBeInTheDocument()
+    expect(screen.getByLabelText(/email address/i)).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('tab', { name: /register/i }))
+    expect(screen.getByRole('dialog', { name: /create candidate account/i })).toBeInTheDocument()
+    expect(screen.getByLabelText(/full name/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/date of birth/i)).toBeInTheDocument()
   })
 })
 

@@ -20,4 +20,6 @@ Only screenshots captured from the actual tool or application are accepted. Rows
 | `02_backend_tests.png` | 10 | Ubuntu Terminal | Show Java 17 Maven tests with three passing tests | MANUAL SCREENSHOT REQUIRED |
 | `01_aerocadet_landing.png` | 13 | Application browser | Verify the real AeroCadet desktop landing page | Ready to capture from local port 4174 |
 | `02_aerocadet_mobile.png` | 13 | Application browser | Verify the responsive mobile landing page | Ready to capture at 390×844 viewport |
+| `03_aerocadet_sign_in.png` | 13 | Application browser | Verify the real sign-in interface | Ready to capture from local port 4174 |
+| `04_aerocadet_registration.png` | 13 | Application browser | Verify all required candidate registration fields | Ready to capture from local port 4174 |
 

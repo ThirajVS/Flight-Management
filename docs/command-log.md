@@ -19,4 +19,8 @@ Actual execution evidence is recorded incrementally. Secret values and credentia
 | Foundation | 2026-09-29 | PowerShell | `npm run build` | Create production frontend bundle | Vite build succeeds | 1,577 modules transformed; bundle produced | Pass | Pending experiment 5 capture |
 | Foundation | 2026-09-29 | Ubuntu WSL2 / Docker | `docker run ... maven:3.9.9-eclipse-temurin-17 mvn -B -q test` | Compile and test backend on required Java 17 | JUnit tests execute | 3 passed, 0 failed, 0 errors | Pass | Pending experiment 10 capture |
 | Foundation | 2026-09-29 | Browser | Open `http://localhost:4174/` | Visual desktop and mobile validation | AeroCadet landing page renders responsively | Desktop and 390×844 mobile layouts rendered; navigation collapses on mobile | Pass | Pending application screenshot |
+| Authentication | 2026-09-29 | Ubuntu WSL2 / Docker | `mvn -B -q test` | Verify registration, BCrypt, JWT, conflicts and protected access | Integration suite passes | 7 backend tests passed, including 4 authentication tests | Pass | Pending experiment 10 capture |
+| Authentication | 2026-09-29 | PowerShell | `npm run test:ci` | Verify authentication interface behavior | Frontend suite passes | 3 tests passed | Pass | Pending experiment 10 capture |
+| Authentication | 2026-09-29 | PowerShell | `npm run build` | Verify production bundle | Vite build succeeds | 1,579 modules transformed; bundle produced | Pass | Pending experiment 5 capture |
+| Authentication | 2026-09-29 | Application browser | Open sign-in and registration dialogs | Visual UI validation | Responsive fields and states visible | Both polished forms rendered with no console-visible error | Pass | Pending integrated project capture |
 
