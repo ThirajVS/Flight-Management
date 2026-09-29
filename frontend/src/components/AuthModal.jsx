@@ -14,7 +14,7 @@ const initialRegistration = {
   country: '',
 }
 
-function AuthModal({ initialMode = 'login', onClose }) {
+function AuthModal({ initialMode = 'login', onClose, onAuthenticated }) {
   const [mode, setMode] = useState(initialMode)
   const [loginForm, setLoginForm] = useState({ email: '', password: '' })
   const [registrationForm, setRegistrationForm] = useState(initialRegistration)
@@ -43,6 +43,7 @@ function AuthModal({ initialMode = 'login', onClose }) {
           ? `Welcome back, ${response.user.fullName}.`
           : 'Your candidate account is ready. Welcome aboard.',
       })
+      onAuthenticated?.(response.user)
     } catch (error) {
       setStatus({ loading: false, error: error.message, success: '' })
     }

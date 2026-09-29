@@ -62,5 +62,12 @@ public class ApplicationController {
     public ResponseEntity<ApplicationDtos.Response> updateStatus(Authentication authentication, @PathVariable Long id, @Valid @RequestBody ApplicationDtos.StatusUpdate update) {
         return ResponseEntity.ok(workflowService.updateStatus(authentication.getName(), id, update));
     }
+
+    @PutMapping("/{id}/stages/{stageId}")
+    @PreAuthorize("hasAnyRole('RECRUITER','ADMIN')")
+    public ResponseEntity<ApplicationDtos.StageItem> updateStage(Authentication authentication, @PathVariable Long id,
+            @PathVariable Long stageId, @Valid @RequestBody ApplicationDtos.StageUpdate update) {
+        return ResponseEntity.ok(workflowService.updateStage(authentication.getName(), id, stageId, update));
+    }
 }
 

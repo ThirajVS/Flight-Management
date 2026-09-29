@@ -7,5 +7,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface CadetProgramRepository extends JpaRepository<CadetProgram, Long>, JpaSpecificationExecutor<CadetProgram> {
     Page<CadetProgram> findByStatus(ProgramStatus status, Pageable pageable);
+    long countByStatus(ProgramStatus status);
 }
 

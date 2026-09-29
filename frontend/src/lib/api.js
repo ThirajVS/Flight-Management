@@ -16,6 +16,17 @@ async function request(path, options = {}) {
   return body
 }
 
+async function authenticatedRequest(path, options = {}) {
+  const token = sessionStorage.getItem('aerocadet.accessToken')
+  return request(path, {
+    ...options,
+    headers: {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...options.headers,
+    },
+  })
+}
+
 export function login(credentials) {
   return request('/auth/login', {
     method: 'POST',
@@ -39,4 +50,24 @@ export function storeSession(authResponse) {
   sessionStorage.setItem('aerocadet.accessToken', authResponse.accessToken)
   sessionStorage.setItem('aerocadet.user', JSON.stringify(authResponse.user))
 }
+
+export function getStoredUser() {
+  try {
+    return JSON.parse(sessionStorage.getItem('aerocadet.user'))
+  } catch {
+    return null
+  }
+}
+
+export function clearSession() {
+  sessionStorage.removeItem('aerocadet.accessToken')
+  sessionStorage.removeItem('aerocadet.user')
+}
+
+export const getMyApplications = () => authenticatedRequest('/applications')
+export const getNotifications = () => authenticatedRequest('/notifications')
+export const getInterviews = () => authenticatedRequest('/interviews')
+export const getCandidateProfile = () => authenticatedRequest('/candidates/profile')
+export const getRecruiterDashboard = () => authenticatedRequest('/recruiter/dashboard')
+export const getAdminAnalytics = () => authenticatedRequest('/analytics/summary')
 

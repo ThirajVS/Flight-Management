@@ -125,6 +125,21 @@ public class ApplicationWorkflowService {
         return response(application);
     }
 
+    @Transactional
+    public ApplicationDtos.StageItem updateStage(String actorEmail, Long applicationId, Long stageId, ApplicationDtos.StageUpdate update) {
+        CadetApplication application = find(applicationId);
+        SelectionStage stage = stageRepository.findById(stageId)
+                .filter(item -> item.getApplication().getId().equals(applicationId))
+                .orElseThrow(() -> new ResourceNotFoundException("Selection stage was not found"));
+        stage.update(update.status(), update.scheduledAt(), update.score(), update.remarks());
+        notificationService.create(application.getCandidate(), "SELECTION_STAGE", "Selection stage updated",
+                stage.getStage() + " is now " + update.status().replace('_', ' ') + ".");
+        auditService.record(actorEmail, "SELECTION_STAGE_UPDATED", "APPLICATION", applicationId.toString(),
+                stage.getStage() + ": " + update.status());
+        return new ApplicationDtos.StageItem(stage.getId(), stage.getStageOrder(), stage.getStage(), stage.getStatus(),
+                stage.getScheduledAt(), stage.getScore(), stage.getRemarks());
+    }
+
     @Transactional(readOnly = true)
     public ApplicationDtos.Tracking tracking(String email, Long id, boolean reviewer) {
         CadetApplication application = reviewer ? find(id) : owned(email, id);

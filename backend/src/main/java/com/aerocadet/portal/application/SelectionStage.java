@@ -37,6 +37,13 @@ public class SelectionStage {
     public SelectionStage(CadetApplication application, int stageOrder, String stage, String status) {
         this.application = application; this.stageOrder = stageOrder; this.stage = stage; this.status = status;
     }
+    public void update(String status, Instant scheduledAt, BigDecimal score, String remarks) {
+        this.status = status;
+        this.scheduledAt = scheduledAt;
+        this.score = score;
+        this.remarks = remarks;
+    }
+    public CadetApplication getApplication() { return application; }
     public Long getId() { return id; }
     public int getStageOrder() { return stageOrder; }
     public String getStage() { return stage; }
