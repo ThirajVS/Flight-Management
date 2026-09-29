@@ -16,10 +16,13 @@ The tested foundation and authentication increments provide:
 - real JUnit integration tests and Maven test reports;
 - a responsive React/Vite aviation landing page;
 - polished sign-in and candidate-registration interfaces wired to the API;
+- a searchable, paginated marketplace containing ten clearly fictional cadet programs;
+- detailed academic, aviation, medical-document-status, passport, and preference profiles;
+- a persisted rule-by-rule eligibility engine with eligible, not-eligible, and pending-verification outcomes;
 - secure environment-variable templates and secret-safe Git exclusions;
 - initial environment, command, and screenshot documentation.
 
-Later increments add role-based dashboards, cadet programs, eligibility, applications, documents, selection workflows, analytics, Docker Compose, Jenkins, and Ansible.
+Later increments add role-based dashboards, applications, documents, selection workflows, analytics, Docker Compose, Jenkins, and Ansible.
 
 ## Technology stack
 
@@ -51,6 +54,11 @@ Flight_Management/
 - `POST /api/auth/register` — create a candidate account and profile
 - `POST /api/auth/login` — authenticate and receive an expiring bearer token
 - `GET /api/auth/me` — retrieve the authenticated user and roles
+- `GET /api/programs` — search/filter/paginate fictional program data
+- `GET /api/programs/{id}` — retrieve program rules and selection stages
+- `GET|PUT /api/candidates/profile` — view or complete the authenticated candidate profile
+- `POST /api/programs/{id}/eligibility` — calculate and store transparent eligibility checks
+- `GET /api/programs/{id}/eligibility/latest` — retrieve the most recent stored result
 
 ## Local verification
 
@@ -80,6 +88,7 @@ Do not copy `.env.example` values into a shared environment unchanged. Create a 
 - [Command log](docs/command-log.md)
 - [Screenshot manifest](docs/screenshot-manifest.md)
 - [Authentication design](docs/authentication.md)
+- [Programs, profiles, and eligibility](docs/programs-and-eligibility.md)
 
 ## Safety and scope
 

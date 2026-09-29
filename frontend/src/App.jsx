@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   ArrowRight,
   BadgeCheck,
@@ -15,8 +15,9 @@ import {
   Sparkles,
 } from 'lucide-react'
 import AuthModal from './components/AuthModal'
+import { getPrograms } from './lib/api'
 
-const programs = [
+const fallbackPrograms = [
   {
     code: 'ACP-01',
     title: 'Airline Cadet Pilot Program',
@@ -63,6 +64,35 @@ function BrandMark() {
 
 function App() {
   const [authMode, setAuthMode] = useState(null)
+  const [programs, setPrograms] = useState(fallbackPrograms)
+
+  useEffect(() => {
+    let active = true
+    async function loadPrograms() {
+      try {
+        const result = await getPrograms({ status: 'OPEN', size: 3 })
+        if (active && result.content?.length) {
+          setPrograms(result.content.map((program, index) => ({
+            code: program.code,
+            title: program.name,
+            organisation: program.organisation,
+            location: program.trainingLocation,
+            duration: `${program.durationMonths} months`,
+            deadline: new Date(`${program.applicationDeadline}T00:00:00`).toLocaleDateString('en-GB', {
+              day: '2-digit',
+              month: 'short',
+              year: 'numeric',
+            }),
+            accent: ['sky', 'violet', 'cyan'][index % 3],
+          })))
+        }
+      } catch {
+        // The curated fallback keeps the landing page useful when the API is offline.
+      }
+    }
+    loadPrograms()
+    return () => { active = false }
+  }, [])
 
   return (
     <main>

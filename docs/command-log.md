@@ -23,4 +23,7 @@ Actual execution evidence is recorded incrementally. Secret values and credentia
 | Authentication | 2026-09-29 | PowerShell | `npm run test:ci` | Verify authentication interface behavior | Frontend suite passes | 3 tests passed | Pass | Pending experiment 10 capture |
 | Authentication | 2026-09-29 | PowerShell | `npm run build` | Verify production bundle | Vite build succeeds | 1,579 modules transformed; bundle produced | Pass | Pending experiment 5 capture |
 | Authentication | 2026-09-29 | Application browser | Open sign-in and registration dialogs | Visual UI validation | Responsive fields and states visible | Both polished forms rendered with no console-visible error | Pass | Pending integrated project capture |
+| Programs / Eligibility | 2026-09-29 | Ubuntu WSL2 / Docker | `mvn -B -q test` | Validate migrations, program search, profile updates and eligibility | All suites pass | 10 backend tests passed, 0 failed | Pass | Pending experiment 10 capture |
+| Programs / Eligibility | 2026-09-29 | PowerShell | `npm run test:ci` | Regression-test frontend after API marketplace wiring | Tests pass | 3 passed | Pass | Pending experiment 10 capture |
+| Programs / Eligibility | 2026-09-29 | PowerShell | `npm run build` | Verify production bundle | Build succeeds | 1,579 modules transformed | Pass | Pending experiment 5 capture |
 
