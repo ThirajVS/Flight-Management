@@ -24,7 +24,7 @@ The default isolated CI ports are 18090, 18081, and 15433. Ephemeral CI-only dat
 
 ## Windows agent note
 
-Docker Desktop is called using its absolute CLI path because it is not on this workstation's system `PATH`. `RUN_ANSIBLE` is disabled by default because a Windows service account may not own the interactive user's WSL distribution. Ansible was independently verified from Ubuntu. Enable the parameter only on a Jenkins agent where Ubuntu/Ansible is available to the service account.
+`DEPLOY` is disabled by default because this workstation's Jenkins service runs as Windows `SYSTEM`, while Docker is available only through the interactive user's WSL engine. The build-and-test path therefore runs reliably on the local service. Enable `DEPLOY` on an agent with Docker CLI access to execute the Docker Build, Compose Validation, Deployment, and Health Check stages against the isolated CI ports. `RUN_ANSIBLE` is also disabled by default because a Windows service account may not own the interactive user's WSL distribution. Ansible was independently verified from Ubuntu; enable it only where Ubuntu/Ansible is available to the service account.
 
 ## Webhook honesty
 

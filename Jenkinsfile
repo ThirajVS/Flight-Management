@@ -8,7 +8,7 @@ pipeline {
     }
 
     parameters {
-        booleanParam(name: 'DEPLOY', defaultValue: true, description: 'Deploy the isolated CI stack after all tests pass')
+        booleanParam(name: 'DEPLOY', defaultValue: false, description: 'Deploy the isolated CI stack on an agent with Docker CLI access')
         booleanParam(name: 'RUN_ANSIBLE', defaultValue: false, description: 'Run Ansible on an agent with the Ubuntu WSL distribution available')
     }
 
