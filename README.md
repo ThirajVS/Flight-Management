@@ -4,17 +4,22 @@
 
 AeroCadet is an educational, full-stack aviation cadet recruitment portal built to demonstrate a complete Git → GitHub → Jenkins → Testing → Docker → Ansible deployment lifecycle. All programs and candidate records in this repository are fictional demonstration data.
 
-## Current increment
+## Implemented increments
 
-The foundation increment provides:
+The tested foundation and authentication increments provide:
 
 - a Java 17-targeted Spring Boot backend with public status and Actuator health endpoints;
-- real JUnit tests and Maven test reports;
+- candidate registration with complete contact and location fields;
+- BCrypt password hashing, JWT expiry/validation, and stateless Spring Security;
+- candidate/recruiter/admin role foundations and protected identity lookup;
+- consistent validation, authentication, authorization, and conflict errors;
+- real JUnit integration tests and Maven test reports;
 - a responsive React/Vite aviation landing page;
+- polished sign-in and candidate-registration interfaces wired to the API;
 - secure environment-variable templates and secret-safe Git exclusions;
 - initial environment, command, and screenshot documentation.
 
-Later increments add authentication, role-based dashboards, cadet programs, eligibility, applications, documents, selection workflows, analytics, Docker Compose, Jenkins, and Ansible.
+Later increments add role-based dashboards, cadet programs, eligibility, applications, documents, selection workflows, analytics, Docker Compose, Jenkins, and Ansible.
 
 ## Technology stack
 
@@ -39,10 +44,13 @@ Flight_Management/
 └── README.md
 ```
 
-## Foundation endpoints
+## Available endpoints
 
 - `GET /api/public/status` — public application identity and service status
 - `GET /actuator/health` — deployment health probe
+- `POST /api/auth/register` — create a candidate account and profile
+- `POST /api/auth/login` — authenticate and receive an expiring bearer token
+- `GET /api/auth/me` — retrieve the authenticated user and roles
 
 ## Local verification
 
@@ -71,6 +79,7 @@ Do not copy `.env.example` values into a shared environment unchanged. Create a 
 - [Environment check](docs/environment-check.md)
 - [Command log](docs/command-log.md)
 - [Screenshot manifest](docs/screenshot-manifest.md)
+- [Authentication design](docs/authentication.md)
 
 ## Safety and scope
 

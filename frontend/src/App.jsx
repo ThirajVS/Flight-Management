@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
   ArrowRight,
   BadgeCheck,
@@ -13,6 +14,7 @@ import {
   ShieldCheck,
   Sparkles,
 } from 'lucide-react'
+import AuthModal from './components/AuthModal'
 
 const programs = [
   {
@@ -60,6 +62,8 @@ function BrandMark() {
 }
 
 function App() {
+  const [authMode, setAuthMode] = useState(null)
+
   return (
     <main>
       <header className="site-header">
@@ -74,8 +78,8 @@ function App() {
           <a href="#about">Why AeroCadet</a>
         </nav>
         <div className="header-actions">
-          <button className="text-button" type="button">Sign in</button>
-          <button className="primary-button compact" type="button">
+          <button className="text-button" type="button" onClick={() => setAuthMode('login')}>Sign in</button>
+          <button className="primary-button compact" type="button" onClick={() => setAuthMode('register')}>
             Create account <ArrowRight size={15} />
           </button>
           <button className="menu-button" type="button" aria-label="Open menu"><Menu /></button>
@@ -224,7 +228,7 @@ function App() {
           <h2>Build your cadet journey with confidence.</h2>
           <p>Create your candidate profile, explore demo programs and keep every application milestone visible.</p>
         </div>
-        <button className="primary-button light" type="button">Create your profile <ArrowRight size={18} /></button>
+        <button className="primary-button light" type="button" onClick={() => setAuthMode('register')}>Create your profile <ArrowRight size={18} /></button>
       </section>
 
       <footer>
@@ -232,6 +236,7 @@ function App() {
         <p>Educational DevOps laboratory project · Synthetic data only · Not affiliated with an airline.</p>
         <span>© 2026 AeroCadet</span>
       </footer>
+      {authMode && <AuthModal initialMode={authMode} onClose={() => setAuthMode(null)} />}
     </main>
   )
 }
