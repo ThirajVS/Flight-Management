@@ -26,4 +26,5 @@ Actual execution evidence is recorded incrementally. Secret values and credentia
 | Programs / Eligibility | 2026-09-29 | Ubuntu WSL2 / Docker | `mvn -B -q test` | Validate migrations, program search, profile updates and eligibility | All suites pass | 10 backend tests passed, 0 failed | Pass | Pending experiment 10 capture |
 | Programs / Eligibility | 2026-09-29 | PowerShell | `npm run test:ci` | Regression-test frontend after API marketplace wiring | Tests pass | 3 passed | Pass | Pending experiment 10 capture |
 | Programs / Eligibility | 2026-09-29 | PowerShell | `npm run build` | Verify production bundle | Build succeeds | 1,579 modules transformed | Pass | Pending experiment 5 capture |
+| Application Workflow | 2026-09-29 | Ubuntu WSL2 / Docker | `mvn -B -q test` | Execute draft, submit, upload, review, shortlist, notification and audit flow | Integration suite passes | 12 backend tests passed, 0 failed | Pass | Pending experiment 10 capture |
 
