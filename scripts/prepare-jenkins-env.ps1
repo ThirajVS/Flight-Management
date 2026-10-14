@@ -12,8 +12,12 @@ $workspaceFile = Join-Path $Workspace '.env.jenkins'
 function Get-ContainerEnv([string]$containerName, [string]$key) {
     $json = & $DockerCli inspect --format '{{json .Config.Env}}' $containerName 2>$null
     if ($LASTEXITCODE -ne 0 -or -not $json) { return $null }
-    $entry = @($json | ConvertFrom-Json) | Where-Object { $_ -like "$key=*" } | Select-Object -First 1
-    if ($entry) { return $entry.Substring($key.Length + 1) }
+    $entries = ConvertFrom-Json -InputObject $json
+    foreach ($entry in $entries) {
+        if ($entry -is [string] -and $entry.StartsWith("$key=", [StringComparison]::Ordinal)) {
+            return $entry.Substring($key.Length + 1)
+        }
+    }
     return $null
 }
 
