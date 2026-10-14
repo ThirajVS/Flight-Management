@@ -117,11 +117,8 @@ pipeline {
                           docker --config "$WORKSPACE/.docker-ci" compose --env-file .env.jenkins -p "$COMPOSE_PROJECT_NAME" build
                         '''
                     } else {
-                        bat '''
-                          @if not exist ".docker-ci" mkdir ".docker-ci"
-                          @powershell -NoProfile -Command "$s=[guid]::NewGuid().ToString('N')+[guid]::NewGuid().ToString('N'); @('DATABASE_NAME=aerocadet','DATABASE_USERNAME=aerocadet',('DATABASE_PASSWORD='+$s),('JWT_SECRET='+$s+$s),('DEMO_ACCOUNT_PASSWORD='+$s+'-demo'),'DEMO_DATA_ENABLED=true','APP_HOST_PORT=18090','BACKEND_HOST_PORT=18081','POSTGRES_HOST_PORT=15433') | Set-Content -Encoding ascii .env.jenkins"
-                          @"%COMPOSE_CLI%" --env-file "%WORKSPACE%/.env.jenkins" -p "%COMPOSE_PROJECT_NAME%" build
-                        '''
+                        powershell '.\\scripts\\prepare-jenkins-env.ps1 -DockerCli $env:DOCKER_CLI -Workspace $env:WORKSPACE'
+                        bat '"%COMPOSE_CLI%" --env-file "%WORKSPACE%/.env.jenkins" -p "%COMPOSE_PROJECT_NAME%" build'
                     }
                 }
             }
