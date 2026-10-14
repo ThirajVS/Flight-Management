@@ -13,7 +13,7 @@ pipeline {
     }
 
     environment {
-        DOCKER_CLI = 'C:/Program Files/Docker/Docker/resources/bin/docker.exe'
+        DOCKER_CLI = 'C:/Users/thira/AppData/Local/Programs/DockerDesktop/resources/bin/docker.exe'
         COMPOSE_PROJECT_NAME = 'aerocadet-ci'
         CI_APP_URL = 'http://localhost:18090'
     }
@@ -73,6 +73,22 @@ pipeline {
         stage('Test Report') {
             steps {
                 junit testResults: 'backend/target/surefire-reports/*.xml,frontend/reports/junit.xml', allowEmptyResults: false
+            }
+        }
+
+        stage('Deployment Prerequisites') {
+            when { expression { return params.DEPLOY } }
+            steps {
+                script {
+                    if (isUnix()) {
+                        sh 'docker version --format "Client {{.Client.Version}} / Server {{.Server.Version}}"'
+                    } else {
+                        bat '''
+                          @if not exist "%DOCKER_CLI%" (echo Docker CLI was not found at %DOCKER_CLI% & exit /b 1)
+                          @"%DOCKER_CLI%" version --format "Client {{.Client.Version}} / Server {{.Server.Version}}"
+                        '''
+                    }
+                }
             }
         }
 
