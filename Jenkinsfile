@@ -14,6 +14,7 @@ pipeline {
 
     environment {
         DOCKER_CLI = 'C:/Users/thira/AppData/Local/Programs/DockerDesktop/resources/bin/docker.exe'
+        COMPOSE_CLI = 'C:/Users/thira/AppData/Local/Programs/DockerDesktop/resources/bin/docker-compose.exe'
         COMPOSE_PROJECT_NAME = 'aerocadet-ci'
         CI_APP_URL = 'http://localhost:18090'
     }
@@ -85,7 +86,9 @@ pipeline {
                     } else {
                         bat '''
                           @if not exist "%DOCKER_CLI%" (echo Docker CLI was not found at %DOCKER_CLI% & exit /b 1)
+                          @if not exist "%COMPOSE_CLI%" (echo Docker Compose was not found at %COMPOSE_CLI% & exit /b 1)
                           @"%DOCKER_CLI%" version --format "Client {{.Client.Version}} / Server {{.Server.Version}}"
+                          @"%COMPOSE_CLI%" version
                         '''
                     }
                 }
@@ -117,7 +120,7 @@ pipeline {
                         bat '''
                           @if not exist ".docker-ci" mkdir ".docker-ci"
                           @powershell -NoProfile -Command "$s=[guid]::NewGuid().ToString('N')+[guid]::NewGuid().ToString('N'); @('DATABASE_NAME=aerocadet','DATABASE_USERNAME=aerocadet',('DATABASE_PASSWORD='+$s),('JWT_SECRET='+$s+$s),('DEMO_ACCOUNT_PASSWORD='+$s+'-demo'),'DEMO_DATA_ENABLED=true','APP_HOST_PORT=18090','BACKEND_HOST_PORT=18081','POSTGRES_HOST_PORT=15433') | Set-Content -Encoding ascii .env.jenkins"
-                          @"%DOCKER_CLI%" --config "%WORKSPACE%/.docker-ci" compose --env-file "%WORKSPACE%/.env.jenkins" -p "%COMPOSE_PROJECT_NAME%" build
+                          @"%COMPOSE_CLI%" --env-file "%WORKSPACE%/.env.jenkins" -p "%COMPOSE_PROJECT_NAME%" build
                         '''
                     }
                 }
@@ -129,7 +132,7 @@ pipeline {
             steps {
                 script {
                     if (isUnix()) { sh 'docker --config "$WORKSPACE/.docker-ci" compose --env-file .env.jenkins -p "$COMPOSE_PROJECT_NAME" config --quiet' }
-                    else { bat '"%DOCKER_CLI%" --config "%WORKSPACE%/.docker-ci" compose --env-file "%WORKSPACE%/.env.jenkins" -p "%COMPOSE_PROJECT_NAME%" config --quiet' }
+                    else { bat '"%COMPOSE_CLI%" --env-file "%WORKSPACE%/.env.jenkins" -p "%COMPOSE_PROJECT_NAME%" config --quiet' }
                 }
             }
         }
@@ -139,7 +142,7 @@ pipeline {
             steps {
                 script {
                     if (isUnix()) { sh 'docker --config "$WORKSPACE/.docker-ci" compose --env-file .env.jenkins -p "$COMPOSE_PROJECT_NAME" up -d --wait' }
-                    else { bat '"%DOCKER_CLI%" --config "%WORKSPACE%/.docker-ci" compose --env-file "%WORKSPACE%/.env.jenkins" -p "%COMPOSE_PROJECT_NAME%" up -d --wait' }
+                    else { bat '"%COMPOSE_CLI%" --env-file "%WORKSPACE%/.env.jenkins" -p "%COMPOSE_PROJECT_NAME%" up -d --wait' }
                 }
             }
         }
